@@ -5,3 +5,4 @@
 
     <strong>Message:</strong> {{$data['message']}}
 @endcomponent
+Cont

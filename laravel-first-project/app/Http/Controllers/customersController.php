@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 use App\Company;
 use App\Customer;
+use App\Events\NewCustomerHasRegisteredEvent;
+use App\Mail\WelcomNewUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class customersController extends Controller {
+
+    public function __construct(){
+        $this->middleware('auth')-> only(['edit', 'create', 'delete']);
+    }
 
     public function index(){
         $customers = Customer::all();
@@ -20,7 +27,9 @@ class customersController extends Controller {
 
     public function store() {
 
-        Customer::create($this -> validateRequest());
+        $customer = Customer::create($this -> validateRequest());
+
+        event(new NewCustomerHasRegisteredEvent($customer));
 
         return redirect('customers');
     }
